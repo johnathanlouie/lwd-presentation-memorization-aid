@@ -1,0 +1,151 @@
+﻿<html>
+<head>
+<title></title>
+<style>
+div
+{
+  font-family:"Meiryo";
+  font-size:20pt;
+}
+</style>
+<script>
+var history = 0;
+var divArray = new Array();
+function hideText()
+{
+  var textarea = document.getElementsByTagName("textarea")[0];
+  var button = document.getElementsByTagName("button")[0];
+  if (textarea.style.visibility == "hidden")
+  {
+    textarea.style.visibility = "visible";
+    button.innerHTML = "Hide";
+  }
+  else
+  {
+    textarea.style.visibility = "hidden";
+    button.innerHTML = "Show";
+  }
+  modifyDiv();
+}
+function modifyDiv()
+{
+  arrayUpdater();
+  var div = document.getElementsByTagName("div")[1];
+  div.innerHTML = "";
+  for (var i = 0; i < divArray.length; i++)
+  {
+    div.innerHTML += "<span>" + divArray[i] + "</span><br />";
+  }
+  showHideSpan();
+  highlightNum();
+}
+function next()
+{
+  if (history < divArray.length)
+  {
+    history++;
+    showHideSpan();
+  }
+}
+function back()
+{
+  if (history > 0)
+  {
+    history--;
+    showHideSpan();
+  }
+}
+function showHideSpan()
+{
+  var span = document.getElementsByTagName("span");
+  for (var i = 0; i < history; i++)
+  {
+    span[i].style.visibility = "visible";
+  }
+  for (var k = history; k < divArray.length; k++)
+  {
+    span[k].style.visibility = "hidden";
+  }
+}
+function highlightNum()
+{
+  var input1 = document.getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+  var input2 = document.getElementsByTagName("div")[0].getElementsByTagName("input")[1].value;
+  if (input1) {var num = new Number(input1);}
+  if (input2) {var gnum = new Number(input2);}
+  var span = document.getElementsByTagName("span");
+  for (var k = 0; k < divArray.length; k++)
+  {
+    span[k].style.color = "black";
+  }
+  var i = num - 1;
+  while (i < divArray.length && i >= 0 && gnum > 0)
+  {
+    span[i].style.color = "red";
+    i += gnum;
+  }
+}
+function arrayUpdater()
+{
+  var textarea = document.getElementsByTagName("textarea")[0];
+  divArray = textarea.value.split("\n");
+}
+function meiryo()
+{
+  var div = document.getElementsByTagName("div")[1];
+  div.style.fontFamily = "Meiryo";
+}
+function kaiti()
+{
+  var div = document.getElementsByTagName("div")[1];
+  div.style.fontFamily = "KaiTi";
+}
+function omvKeyPressed(e)
+{
+  var keyCode = 0;
+  if (navigator.appName == "Microsoft Internet Explorer")
+  {
+    if (!e) {var e = window.event;}
+    if (e.keyCode)
+    {
+      keyCode = e.keyCode;
+      if ((keyCode == 40) || (keyCode == 39)) {window.event.keyCode = 0;}
+    }
+    else {keyCode = e.which;}
+  }
+  else
+  {
+    if (e.which) {keyCode = e.which;}
+    else {keyCode = e.keyCode;}
+  }
+  switch (keyCode)
+  {
+    case 37:
+    back();
+    return false;
+    case 38:
+    back();
+    return false;
+    case 39:
+    next();
+    return false;
+    case 40:
+    next();
+    return false;
+    default:
+    return true;
+  }
+}
+document.onkeydown = omvKeyPressed;
+window.onload = modifyDiv;
+</script>
+</head>
+<body>
+<input type="radio" name="font" onclick="meiryo();" checked="checked" />Meiryo
+<input type="radio" name="font" onclick="kaiti();" />KaiTi
+<div>Place<input onchange="highlightNum()" />Number of Members<input onchange="highlightNum()" /></div>
+<textarea onchange="modifyDiv();"></textarea>
+<button onclick="hideText();">Hide</button>
+<div></div>
+</body>
+</html>
